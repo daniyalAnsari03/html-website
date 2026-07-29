@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Perfume</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Georgia',serif;
+            margin: 0;
+            padding-top: 80px;
+        }
+        header{
+            width:100%;
+            position:fixed;
+            top:0;
+            left:0;
+            background: rgba(17,17,17,.92);
+            backdrop-filter: blur(8px);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 80px;
+            z-index:100;
+            border-bottom: 1px solid rgba(212,175,55,.15);
+        }
+        .logo{
+            font-size:28px;
+            color:#d4af37;
+            font-weight:bold;
+            letter-spacing: 6px;
+        }
+        nav{
+            display:flex;
+            gap: 35px;
+        }
+        nav a{
+            color: #aaa;
+            text-decoration:none;
+            font-size:13px;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            transition: color .3s ease;
+            position:relative;
+        }
+        nav a::after{
+            content:"";
+            position:absolute;
+            left:0;
+            bottom:-4px;
+            width:0;
+            height:1px;
+            background:#d4af37;
+            transition: width .3s ease;
+        }
+        nav a:hover{
+            color:#d4af37;
+        }
+        nav a:hover::after{
+            width:100%;
+        }
+        .hamburger{
+            display:none;
+            flex-direction:column;
+            gap:5px;
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:5px;
+            z-index:101;
+        }
+        .hamburger span{
+            display:block;
+            width:26px;
+            height:2px;
+            background:#d4af37;
+            transition:transform .3s ease, opacity .3s ease;
+        }
+        .hamburger.active span:nth-child(1){
+            transform:rotate(45deg) translate(5px,5px);
+        }
+        .hamburger.active span:nth-child(2){
+            opacity:0;
+        }
+        .hamburger.active span:nth-child(3){
+            transform:rotate(-45deg) translate(5px,-5px);
+        }
+        .nav-overlay{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.65);
+            z-index:99;
+            opacity:0;
+            transition:opacity .4s ease;
+        }
+        .nav-overlay.open{
+            display:block;
+            opacity:1;
+        }
+        .hero{
+            height: 100vh;
+            background-image:url("./images/luxury-black-perfume-bottle-with-gold-cap-dark-textured-background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        .hero::before{
+            content:"";
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.55);
+        }
+        .hero-content{
+            position:relative;
+            z-index:2;
+        }
+        .hero h1{
+            font-size:65px;
+            color:#d4af37;
+        }
+        .hero p{
+            margin:20px 0;
+            font-size:20px;
+        }
+        .hero button{
+            padding:15px 35px;
+            border:none;
+            background:#d4af37;
+            color:black;
+            font-size:18px;
+            cursor:pointer;
+            border-radius:30px;
+        }
+        .hero button:hover{
+            background:white;
+        }
+        .features{
+            padding:80px;
+            text-align:center;
+            background:#111;
+        }
+        .features h2{
+            font-size:40px;
+            color:#d4af37;
+            margin-bottom:60px;
+        }
+        .features-grid{
+            display:flex;
+            justify-content:center;
+            gap:50px;
+            flex-wrap:wrap;
+            max-width:1100px;
+            margin:0 auto;
+        }
+        .feature-item{
+            flex:1;
+            min-width:260px;
+            max-width:320px;
+            padding:40px 25px;
+            border:1px solid rgba(212,175,55,.15);
+            border-radius:12px;
+            transition:.4s;
+        }
+        .feature-item:hover{
+            border-color:#d4af37;
+            transform:translateY(-6px);
+            background:rgba(212,175,55,.04);
+        }
+        .feature-icon{
+            font-size:44px;
+            margin-bottom:20px;
+            display:block;
+        }
+        .feature-item h3{
+            font-size:20px;
+            color:#d4af37;
+            margin-bottom:12px;
+            letter-spacing:2px;
+        }
+        .feature-item p{
+            font-size:14px;
+            color:#999;
+            line-height:1.7;
+            letter-spacing:.5px;
+        }
+        .products{
+            padding:80px;
+            text-align:center;
+        }
+        .products h2{
+            font-size:40px;
+            color:#d4af37;
+            margin-bottom:50px;
+        }
+        .cards{
+            display:flex;
+            justify-content:center;
+            gap:30px;
+            flex-wrap:wrap;
+        }
+        .card{
+            width:300px;
+            background:#1f1f1f;
+            border-radius:15px;
+            overflow:hidden;
+            transition:.4s;
+            cursor:pointer;
+        }
+        .card:hover{
+            transform:translateY(-10px);
+        }
+        .card img{
+            width:100%;
+            height:350px;
+            object-fit:cover;
+        }
+        .card h3{
+            margin:15px 0;
+        }
+        .card p{
+            padding:0 20px 20px;
+            color:#ccc;
+        }
+
+        .modal-overlay{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.85);
+            z-index:200;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
+        .modal-overlay.active{
+            display:flex;
+        }
+        .modal{
+            background:#1f1f1f;
+            border-radius:15px;
+            max-width:700px;
+            width:100%;
+            max-height:90vh;
+            overflow-y:auto;
+            padding:30px;
+            position:relative;
+            animation: fadeIn .3s ease;
+        }
+        @keyframes fadeIn{
+            from{transform:scale(.9);opacity:0}
+            to{transform:scale(1);opacity:1}
+        }
+        .modal-close{
+            position:absolute;
+            top:15px;
+            right:20px;
+            font-size:30px;
+            color:#d4af37;
+            cursor:pointer;
+            background:none;
+            border:none;
+        }
+        .modal img{
+            width:100%;
+            max-height:400px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+        .modal h2{
+            color:#d4af37;
+            font-size:32px;
+            margin:20px 0 10px;
+        }
+        .modal p{
+            font-size:18px;
+            line-height:1.7;
+            color:#ccc;
+        }
+
+        footer{
+            background: #111;
+            padding: 50px 80px 30px;
+            text-align: center;
+            border-top: 1px solid rgba(212, 175, 55, .15);
+        }
+        footer h3{
+            font-size: 28px;
+            color: #d4af37;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+        }
+        footer .tagline{
+            color: #777;
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+        footer .social{
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        footer .social a{
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color .3s ease;
+            position: relative;
+        }
+        footer .social a::after{
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 1px;
+            background: #d4af37;
+            transition: width .3s ease;
+        }
+        footer .social a:hover{
+            color: #d4af37;
+        }
+        footer .social a:hover::after{
+            width: 100%;
+        }
+        footer .copy{
+            color: #555;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,.05);
+            padding-top: 20px;
+        }
+
+        .reveal{
+            opacity:0;
+            transform:translateY(40px);
+            transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+        }
+        .reveal.visible{
+            opacity:1;
+            transform:translateY(0);
+        }
+        .hero-content.reveal{
+            transform:translateY(50px) scale(.96);
+        }
+        .hero-content.reveal.visible{
+            transform:translateY(0) scale(1);
+        }
+        .feature-item.reveal:nth-child(2){
+            transition-delay:.15s;
+        }
+        .feature-item.reveal:nth-child(3){
+            transition-delay:.3s;
+        }
+        .card.reveal:nth-child(2){
+            transition-delay:.15s;
+        }
+        .card.reveal:nth-child(3){
+            transition-delay:.3s;
+        }
+        footer .tagline.reveal{
+            transition-delay:.1s;
+        }
+
+        /* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+        @media (max-width: 900px) {
+            header {
+                padding: 18px 40px;
+            }
+            .hero h1 {
+                font-size: 48px;
+            }
+            .hero p {
+                font-size: 17px;
+                padding: 0 20px;
+            }
+            .features {
+                padding: 60px 40px;
+            }
+            .features h2 {
+                font-size: 34px;
+            }
+            .products {
+                padding: 60px 40px;
+            }
+            .products h2 {
+                font-size: 34px;
+            }
+            footer {
+                padding: 40px 40px 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 25px;
+            }
+            .logo {
+                font-size: 22px;
+                letter-spacing: 4px;
+            }
+            .hamburger{
+                display:flex;
+            }
+            nav{
+                position:fixed;
+                top:0;
+                right:-280px;
+                width:260px;
+                height:100vh;
+                background:rgba(17,17,17,.98);
+                backdrop-filter:blur(12px);
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                gap:30px;
+                transition:right .4s cubic-bezier(.16,1,.3,1);
+                z-index:100;
+                border-left:1px solid rgba(212,175,55,.15);
+            }
+            nav.open{
+                right:0;
+            }
+            nav a{
+                font-size:36px;
+                letter-spacing:6px;
+                font-weight:500;
+                padding:12px 0;
+            }
+            nav a::after{
+                bottom:-8px;
+                height:2px;
+            }
+            .nav-overlay.open{
+                display:block;
+            }
+            .hero h1 {
+                font-size: 38px;
+            }
+            .hero p {
+                font-size: 15px;
+                margin: 15px 0;
+            }
+            .hero button {
+                padding: 13px 28px;
+                font-size: 15px;
+            }
+            .features {
+                padding: 50px 25px;
+            }
+            .features h2 {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+            .feature-item {
+                min-width: 220px;
+                max-width: 280px;
+                padding: 30px 20px;
+            }
+            .products {
+                padding: 50px 25px;
+            }
+            .products h2 {
+                font-size: 28px;
+                margin-bottom: 35px;
+            }
+            .card {
+                width: 260px;
+            }
+            .card img {
+                height: 280px;
+            }
+            footer {
+                padding: 35px 25px 20px;
+            }
+            footer h3 {
+                font-size: 22px;
+                letter-spacing: 4px;
+            }
+            .modal {
+                padding: 20px;
+                margin: 10px;
+            }
+            .modal h2 {
+                font-size: 26px;
+            }
+            .modal p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 12px 15px;
+            }
+            .logo {
+                font-size: 20px;
+                letter-spacing: 3px;
+            }
+            nav {
+                width:220px;
+                right:-240px;
+            }
+            nav.open{
+                right:0;
+            }
+            nav a {
+                font-size:32px;
+                letter-spacing:5px;
+                font-weight:500;
+                padding:10px 0;
+            }
+            .hero h1 {
+                font-size: 30px;
+            }
+            .hero p {
+                font-size: 13px;
+                padding: 0 15px;
+            }
+            .hero button {
+                padding: 11px 24px;
+                font-size: 14px;
+            }
+            .features {
+                padding: 40px 15px;
+            }
+            .features h2 {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            .features-grid {
+                gap: 25px;
+            }
+            .feature-item {
+                min-width: 100%;
+                max-width: 100%;
+                padding: 25px 18px;
+            }
+            .products {
+                padding: 40px 15px;
+            }
+            .products h2 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+            .cards {
+                gap: 20px;
+            }
+            .card {
+                width: 100%;
+                max-width: 380px;
+            }
+            .card img {
+                height: 250px;
+            }
+            footer {
+                padding: 30px 15px 18px;
+            }
+            footer h3 {
+                font-size: 20px;
+                letter-spacing: 3px;
+            }
+            footer .social {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            footer .social a {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+            .modal-overlay {
+                padding: 15px;
+            }
+            .modal {
+                padding: 18px;
+                margin: 5px;
+            }
+            .modal h2 {
+                font-size: 22px;
+            }
+            .modal p {
+                font-size: 14px;
+            }
+            .modal-close {
+                top: 10px;
+                right: 15px;
+                font-size: 26px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+            .hero p {
+                font-size: 12px;
+                margin: 12px 0;
+            }
+            .hero button {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            .card img {
+                height: 200px;
+            }
+            nav a {
+                font-size: 9px;
+                letter-spacing: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">LUXURY</div>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="navMenu">
+            <a href="#">Home</a>
+            <a href="#">Collection</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+        </nav>
+    </header>
+    <div class="nav-overlay" id="navOverlay"></div>
+    <section class="hero">
+        <div class="hero-content reveal fade-up">
+            <h1>Luxury Perfume</h1>
+            <p>Discover the fragrance of elegance and timeless luxury.</p>
+            <button>Shop Now</button>
+        </div>
+    </section>
+    <section class="features">
+        <h2 class="reveal fade-up">Why Choose US</h2>
+        <div class="features-grid">
+            <div class="feature-item reveal fade-up">
+                <span class="feature-icon">&#10086;</span>
+                <h3>Handcrafted Scents</h3>
+                <p>Each fragrance is meticulously blended by master perfumers, ensuring a unique and captivating aroma that lingers with distinction.</p>
+            </div>
+            <div class="feature-item reveal fade-up">
+                <span class="feature-icon">&#9733;</span>
+                <h3>Long-Lasting Formula</h3>
+                <p>Our advanced molecular encapsulation technology delivers enduring fragrance that stays vibrant from morning until night.</p>
+            </div>
+            <div class="feature-item reveal fade-up">
+                <span class="feature-icon">&#9830;</span>
+                <h3>Premium Ingredients</h3>
+                <p>Sourced from the finest botanical gardens worldwide, every ingredient meets the highest standards of purity and excellence.</p>
+            </div>
+        </div>
+    </section>
+    <section class="products">
+        <h2 class="reveal fade-up">Featured Collection</h2>
+        <div class="cards">
+            <div class="card reveal fade-up"
+                 data-title="Royal Gold"
+                 data-description="Royal Gold is a masterpiece of perfumery, blending warm amber, rich saffron, and creamy sandalwood with a touch of fresh bergamot. Designed for those who command attention, this fragrance leaves a memorable trail of sophistication and power. Perfect for evening wear and special occasions, its opulent notes evolve beautifully on the skin throughout the day.">
+                <img src="./images/dark-glass-bottle-with-single-liquid-drop-generative-ai.jpg" alt="RoyalGold">
+                <h3>Royal Gold</h3>
+                <p>Premium fragrance for modern personalities.</p>
+            </div>
+            <div class="card reveal fade-up"
+                 data-title="Elite Rose"
+                 data-description="Elite Rose captures the essence of a blooming garden at dawn. With top notes of fresh Bulgarian rose and violet leaf, a heart of velvety jasmine, and a base of warm musk and cedarwood, this fragrance is both romantic and refined. A timeless choice for weddings, date nights, and every moment you want to feel extraordinary.">
+                <img src="./images/front-view-expensive-fragnance-with-flowers-dark-background-color-perfume-gift-present-love-marriage-scent-flower.jpg" alt="EliteRose">
+                <h3>Elite Rose</h3>
+                <p>Elegant perfume crafted for special moments.</p>
+            </div>
+            <div class="card reveal fade-up"
+                 data-title="Rose Marry"
+                 data-description="Rose Marry is a modern classic that balances freshness with depth. Opening with sparkling pear and pink pepper, it settles into a heart of Turkish rose and lily of the valley, resting on a base of praline and patchouli. Its long-lasting formula ensures you stay enveloped in its enchanting aura from morning to night.">
+                <img src="./images/luxury-black-perfume-bottle-with-gold-cap-dark-textured-background.jpg" alt="RoseMarry">
+                <h3>Rose Marry</h3>
+                <p>Luxury scent with long lasting freshness.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <img id="modalImg" src="" alt="">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDesc"></p>
+        </div>
+    </div>
+
+    <footer>
+        <h3 class="reveal fade-up">LUXURY</h3>
+        <p class="tagline reveal fade-up">Timeless Elegance in Every Note</p>
+        <div class="social">
+            <a href="https://instagram.com/luxuryperfume" target="_blank">Instagram</a>
+            <a href="https://Facebook.com/luxuryperfume" target="_blank">Facebook</a>
+            <a href="https://twitter.com/luxuryperfume" target="_blank">Twitter</a>
+        </div>
+        <p class="copy">&copy; 2026 Luxury Perfume. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const navOverlay = document.getElementById('navOverlay');
+
+        function toggleMenu(open) {
+            hamburger.classList.toggle('active', open);
+            navMenu.classList.toggle('open', open);
+            navOverlay.classList.toggle('open', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = !navMenu.classList.contains('open');
+            toggleMenu(isOpen);
+        });
+
+        navOverlay.addEventListener('click', () => toggleMenu(false));
+
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+        });
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.getElementById('modalImg').src = card.querySelector('img').src;
+                document.getElementById('modalTitle').textContent = card.dataset.title;
+                document.getElementById('modalDesc').textContent = card.dataset.description;
+                document.getElementById('modal').classList.add('active');
+            });
+        });
+        document.getElementById('modalClose').addEventListener('click', () => {
+            document.getElementById('modal').classList.remove('active');
+        });
+        document.getElementById('modal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('modal').classList.remove('active');
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
